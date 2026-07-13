@@ -1,0 +1,202 @@
+
+select * from superstore limit 5;
+select * from superstore where Category = 'Furniture';
+select * from superstore where State= 'Ohio';
+select count(*) from superstore where Category IS NULL;
+select count(*) from superstore ;
+
+select sum(Sales) as total_sale from superstore;
+select sum(Profit) as total_profit from superstore;
+select avg(Sales) as avg_sales from superstore;
+
+select * from superstore limit 5;
+show columns from superstore;
+
+SELECT product_name, SUM(sales) AS total_sales
+FROM superstore
+GROUP BY product_name
+ORDER BY total_sales DESC
+LIMIT 5;
+
+select product_name,sum(Profit) as total_profit
+from superstore
+group by product_name
+order by total_profit asc
+limit 15;
+
+# year wise Sales બતાવો.
+SELECT YEAR(STR_TO_DATE(order_date, '%d/%m/%Y')) AS Year,
+SUM(sales) AS Total_Sales
+FROM superstore
+GROUP BY YEAR(STR_TO_DATE(order_date, '%d/%m/%Y'))
+ORDER BY Year;
+
+# month wise profit
+select year(Order_Date) as year,sum(Profit) as year_profit
+from superstore
+group by year(Order_Date)
+order by year_profit desc
+limit 5;
+
+# Which year had highest sales?
+select Order_Date from superstore;
+SELECT 
+YEAR(STR_TO_DATE(order_date,'%d/%m/%Y')) AS year,
+SUM(profit) AS year_profit
+FROM superstore
+GROUP BY YEAR(STR_TO_DATE(order_date,'%d/%m/%Y'));
+
+select avg(order_date) from superstore;
+select year (order_date)from superstore;
+select order_date,count(*) as total_order
+from superstore group by order_date ;
+
+ -- Category wise Sales અને Profit બતાવો.
+ select Category,
+ SUM(Sales) as total_sales,
+ sum(Profit) as total_profit
+ from superstore group by Category;
+ alter table superstore rename column SubCategory to sub_category ;
+
+-- Sub-Category wise highest sales કઈ છે?
+select Sub-Category from superstore  order by Sales asc; 
+
+-- Which product generated maximum profit?
+select product_name,
+sum(Profit) as total_profit
+  from superstore
+  group by product_name 
+  order by total_profit desc
+  limit 1;
+  
+-- Top 10 selling products 
+select product_name,
+sum(Sales) as total_sale
+from superstore
+group by product_name
+order by total_sale desc
+limit 10;
+
+--  Loss making products 
+select product_name,
+sum(Profit) as total_loss
+from superstore
+group by product_name
+having total_loss < 0
+order by total_loss 
+limit 10;
+
+--  what was total profit of Furniture category 
+select Category ,count(*)from superstore group by Category having count(*) >1;
+select Category,
+sum(Profit) as total_Profit
+from superstore 
+where Category ='Furniture'
+group by Category;
+
+-- Region wise Sales comparison 
+select Region ,count(*)from superstore group by Region having count(*) >1;
+select Region,
+sum(Sales) as total_sales
+from superstore
+group by Region ;
+
+-- Which state has highest profit?
+select State ,count(*) from superstore group by State having count(*) >1;
+select State,
+sum(Profit) as total_profit
+from superstore
+group  by State 
+order by total_profit desc
+limit 10;
+
+-- Which city has maximum orders?
+select City,
+count(*)as total_order 
+from superstore
+group by City
+order by total_order desc
+limit 1;
+
+-- how many total sale in South region 
+select Region,
+sum(Sales) as total_sale
+from superstore
+where Region='South'
+group by Region
+order by total_sale;
+select sum(Sales) as total_sale
+from superstore
+where Region ='south';
+
+-- State wise loss analysis 
+select State,
+sum(Profit) as total_loss
+from superstore
+group by State
+having total_loss <0
+order by total_loss asc;
+
+-- Top 10 customers by sales 
+alter table superstore rename column `Customer Name` to customer_name;
+select customer_name ,
+sum(Sales) as total_sale
+from superstore
+group by customer_name
+order by total_sale desc
+limit 10;
+
+-- Most profitable customer 
+select customer_name,
+sum(profit) as total_profit
+from superstore
+group by customer_name
+order by total_profit desc
+limit 1;
+
+-- Segment wise sales analysis 
+select Segment ,count(*) from superstore group by Segment having count(*) >1;
+select Segment,
+sum(Sales) as total_sale,
+sum(Profit) as total_profit
+from superstore
+group by Segment;
+
+-- Consumer vs Corporate vs Home Office comparison 
+select Segment,
+count(*) as total_order,
+sum(Sales) as total_sale,
+sum(Profit)as total_profit,
+sum(Discount) as total_discount
+from superstore -- Sean O'Donnell
+group by Segment;
+
+-- find Repeat customers 
+select customer_name,count(*) 
+from superstore group by customer_name having count(*) > 1;
+
+--relationship  Discount between Profit  
+select Discount,
+sum(Profit) as total_profit
+from superstore
+group by Discount
+order by Discount desc;
+
+-- High discount products માં loss થાય છે કે નહીં?
+select product_name,Discount,
+sum(Profit) as total_profit
+from superstore
+where Discount > 0.2
+group by product_name,Discount
+order by product_name,Discount desc;
+
+-- Average discount by category
+select Category,avg(Discount) as total_discount
+from superstore
+group by Category;
+
+-- Maximum discount
+select 
+max(Discount) as total_discount
+from superstore;
+
